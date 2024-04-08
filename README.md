@@ -12,3 +12,6 @@
 
 <img src='./report/images/task_preview.png' height=450px width=900px>
 
+### Используемые обозначения:
+в графе: vertex, edge
+в алгоритме: edge

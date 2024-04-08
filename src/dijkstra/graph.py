@@ -16,6 +16,10 @@ class Graph:
         """
         self.adjacency_list = defaultdict(dict)
         self.vertices = set()
+        
+    def reset(self):
+        self.adjacency_list = defaultdict(dict)
+        self.vertices = set()
 
     def add_edge(self, vertex1, vertex2, cost1, cost2):
         """
@@ -56,9 +60,9 @@ class Graph:
             for neighbor, costs in edges.items():
                 print(f"{vertex:>4} -> {neighbor:<4}: {costs[0]:>3}, {costs[1]}")
 
-    def get_neighbors(self, state):
+    def get_neighbors(self, vertex):
         """
-        Gets the neighbors of a given vertex.
+        Gets the neighbors (vertex_id, costs) of a given vertex.
 
         Parameters:
         - state: The vertex for which neighbors are requested.
@@ -66,8 +70,8 @@ class Graph:
         Returns:
         - list: A list of tuples containing neighbors and their costs.
         """
-        if state in self.adjacency_list:
-            return list(self.adjacency_list[state].items())
+        if vertex in self.adjacency_list:
+            return list(self.adjacency_list[vertex].items())
         return []
 
     @property

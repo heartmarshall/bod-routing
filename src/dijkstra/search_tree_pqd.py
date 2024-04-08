@@ -16,7 +16,7 @@ class Node:
         parent: The parent node in the search tree.
     """
 
-    def __init__(self, state, g_values, h_values, parent=None):
+    def __init__(self, state, g_values, h_values=[0, 0], parent=None):
         """
         Initializes a node in the search tree.
 
@@ -27,10 +27,13 @@ class Node:
         - parent: The parent node in the search tree.
         """
         self.state = state
-        self.g1, self.g2 = g_values
+        
         self.g_values = g_values
-        self.h1, self.h2 = h_values
+        self.g1, self.g2 = g_values
+        
         self.h_values = h_values
+        self.h1, self.h2 = h_values
+        
         self.f = (self.g1 + self.h1, self.g2 + self.h2)
         self.parent = parent
         
@@ -62,25 +65,14 @@ class Node:
 
     def __lt__(self, other: 'Node'):
         """
-        Compares two nodes based on their total cost values.
-
-        Parameters:
-        - other (Node): The other node to compare.
-
-        Returns:
-        - bool: True if the current node has a lower total cost than the other, False otherwise.
+        Compares two nodes based on their total cost (f values).
         """
+        # reminder: f is tuple (g1+h1, g2+h2)
         return self.f < other.f
     
     def is_dominates(self, other: 'Node'):
         """
-        Checks if the current node dominates another node.
-
-        Parameters:
-        - other (Node): The other node to compare.
-
-        Returns:
-        - bool: True if the current node dominates the other, False otherwise.
+        Checks if the current node dominates another node (by f value).
         """
         return self.f <= other.f
     
@@ -130,7 +122,7 @@ class SearchTreePQD:
 
     def add_to_open(self, item: Node):
         """
-        Adds a node to the open set.
+        Adds a node to the open set. Lazy addition: checking that such node has already been encountered is done on get_best_node method.
 
         Parameters:
         - item (Node): The node to be added.

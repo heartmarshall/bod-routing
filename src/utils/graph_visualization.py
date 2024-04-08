@@ -9,7 +9,6 @@ def visualize_graph(graph: dict):
             edge_list.append((node1, node2, {"w": f"{graph[node1][node2][0], graph[node1][node2][1]}"}))
 
     G = nx.DiGraph()
-
     G.add_edges_from(edge_list)
     pos=nx.spring_layout(G,seed=1)
     pos=nx.circular_layout(G)

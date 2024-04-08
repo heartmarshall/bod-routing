@@ -4,27 +4,15 @@ import matplotlib.pyplot as plt
 class Solution(ABC):
     """
     Abstract base class for solutions in multi-objective optimization.
-
-    Parameters:
-    - solution_values (list): List of objective values.
-
-    Returns:
-    - None
     """
     @abstractmethod
     def __init__(self, solution_values):
         pass
 
     @abstractmethod
-    def dominates(self, other):
+    def dominates(self, other: 'Solution')->bool:
         """
         Check if this solution dominates another.
-
-        Parameters:
-        - other (BiObjSolution): Another bi-objective solution.
-
-        Returns:
-        - bool: True if this solution dominates the other, False otherwise.
         """
         pass
 
@@ -85,13 +73,13 @@ class ParetoSet:
         self.solutions = set()
         self.SolutionClass = SolutionClass
 
-        #Для визуализации
+        # For visualization
         self.max_y = 0
         self.max_x = 0
         self.all_solusions_ever = set()
 
 
-    def add_solution(self, solution_values):
+    def add_solution(self, solution_values)->bool:
         """
         Add a solution to the Pareto set.
 
@@ -101,15 +89,16 @@ class ParetoSet:
         solution = self.SolutionClass(solution_values)
         non_dominated = self._is_non_dominated(solution)
 
-        #Для визуализации
+        # For visualization
         self.all_solusions_ever.add(solution)
         self.max_x= max(self.max_x, solution.solution_values[0])
         self.max_y = max(self.max_y, solution.solution_values[1])
 
         if non_dominated:
-            
             self.solutions = {s for s in self.solutions if not solution.dominates(s)}
             self.solutions.add(solution)
+            return True
+        return False
 
     def remove_solution(self, solution_values):
         """
@@ -122,15 +111,6 @@ class ParetoSet:
         self.solutions.remove(solution)
 
     def _is_non_dominated(self, solution):
-        """
-        Check if a solution is non-dominated by the current solutions in the set.
-
-        Parameters:
-        - solution (BiObjSolution): The solution to check.
-
-        Returns:
-        - bool: True if the solution is non-dominated, False otherwise.
-        """
         return not any(s.dominates(solution) for s in self.solutions)
 
     def is_non_dominated(self, solution_values):
@@ -144,9 +124,9 @@ class ParetoSet:
         - bool: True if the solution is non-dominated, False otherwise.
         """
         solution = self.SolutionClass(solution_values)
-        return not any(s.dominates(solution) for s in self.solutions)
+        return self._is_non_dominated(solution)
 
-    def get_solutions(self,values=True):
+    def get_solutions(self, values=True):
         """
         Get the current solutions in the Pareto set.
 
@@ -155,8 +135,7 @@ class ParetoSet:
         Default is True.
 
         Returns:
-        - set: Set of solutions in the Pareto set. If values is True, it contains tuples of solution values.
-        If values is False, it contains solution objects.
+        - set: Set of solutions in the Pareto set.
         """
         if values:
             return {s.solution_values for s in self.solutions}
