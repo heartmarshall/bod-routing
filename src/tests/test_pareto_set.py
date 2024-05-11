@@ -1,5 +1,5 @@
 import pytest
-from dijkstra.pareto_set import BiObjSolution, ParetoSet
+from bi_obj_dijkstra.pareto_set import BiObjSolution, ParetoSet
 
 @pytest.fixture
 def pareto_set():

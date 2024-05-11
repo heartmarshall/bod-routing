@@ -1,6 +1,6 @@
-from graph import Graph
-from dijkstra.pareto_set import ParetoSet
-from dijkstra.search_tree_pqd import SearchTreePQD, Node
+from bi_obj_dijkstra.graph import Graph
+from bi_obj_dijkstra.pareto_set import ParetoSet
+from bi_obj_dijkstra.search_tree_pqd import SearchTreePQD, Node
 from collections import defaultdict
 
 def construct_path(node: Node):
@@ -49,10 +49,11 @@ def dijkstra(search_graph: Graph, start_state, search_tree=SearchTreePQD):
         solutions[cur_node.state].add_solution(cur_node.g_values)
 
         for state, costs in search_graph.get_neighbors(cur_node.state):
-            neighbour_g = tuple(x_g + y_g for x_g, y_g in zip(cur_node.g_values, costs))
-            y = Node(state, g_values=neighbour_g, parent=cur_node)
-            if y.g2 >= g2_min[state]:
-                continue
-            search_tree.add_to_open(y)
+            for cost in costs:
+                neighbour_g = tuple(x_g + y_g for x_g, y_g in zip(cur_node.g_values, cost))
+                y = Node(state, g_values=neighbour_g, parent=cur_node)
+                if y.g2 >= g2_min[state]:
+                    continue
+                search_tree.add_to_open(y)
 
     return solutions

@@ -16,7 +16,7 @@ class Graph:
         """
         self.adjacency_list = defaultdict(dict)
         self.vertices = set()
-        
+    
     def reset(self):
         self.adjacency_list = defaultdict(dict)
         self.vertices = set()
@@ -31,7 +31,10 @@ class Graph:
         - cost1: The cost associated with the edge from vertex1 to vertex2.
         - cost2: The cost associated with the edge from vertex2 to vertex1.
         """
-        self.adjacency_list[vertex1][vertex2] = (cost1, cost2)
+        if vertex2 not in self.adjacency_list[vertex1]:
+            self.adjacency_list[vertex1][vertex2] = []
+            
+        self.adjacency_list[vertex1][vertex2].append((cost1, cost2))
         self.vertices.update([vertex1, vertex2])
 
     def read_from_file(self, file_path):
@@ -41,7 +44,7 @@ class Graph:
         Parameters:
         - file_path: The path to the file containing graph data in the format: vertex1 vertex2 cost1 cost2
         """
-        self.adjacency_list = defaultdict(dict)
+        self.adjacency_list = defaultdict(defaultdict(list))
         self.vertices = set()
         try:
             with open(file_path, 'r') as file:
@@ -58,7 +61,8 @@ class Graph:
         print("  V1 -> V2  :  C1, C2")
         for vertex, edges in self.adjacency_list.items():
             for neighbor, costs in edges.items():
-                print(f"{vertex:>4} -> {neighbor:<4}: {costs[0]:>3}, {costs[1]}")
+                for cost in costs:
+                    print(f"{vertex:>4} -> {neighbor:<4}: {cost[0]:>3}, {cost[1]}")
 
     def get_neighbors(self, vertex):
         """

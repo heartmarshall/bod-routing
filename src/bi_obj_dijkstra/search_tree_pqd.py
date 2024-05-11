@@ -16,7 +16,7 @@ class Node:
         parent: The parent node in the search tree.
     """
 
-    def __init__(self, state, g_values, h_values=[0, 0], parent=None):
+    def __init__(self, state, g_values, h_values=(0, 0), parent=None):
         """
         Initializes a node in the search tree.
 
@@ -28,10 +28,10 @@ class Node:
         """
         self.state = state
         
-        self.g_values = g_values
+        self.g_values = tuple(g_values)
         self.g1, self.g2 = g_values
         
-        self.h_values = h_values
+        self.h_values = tuple(h_values)
         self.h1, self.h2 = h_values
         
         self.f = (self.g1 + self.h1, self.g2 + self.h2)
